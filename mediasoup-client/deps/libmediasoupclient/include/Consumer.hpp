@@ -5,6 +5,7 @@
 #include <api/media_stream_interface.h> // webrtc::MediaStreamTrackInterface
 #include <api/rtp_receiver_interface.h> // webrtc::RtpReceiverInterface
 #include <string>
+#include <api/call/audio_sink.h>
 
 namespace mediasoupclient
 {
@@ -12,7 +13,7 @@ namespace mediasoupclient
 	class Transport;
 	class RecvTransport;
 
-	class Consumer
+	class Consumer : webrtc::AudioTrackSinkInterface
 	{
 	public:
 		class PrivateListener
@@ -41,6 +42,7 @@ namespace mediasoupclient
 		  const nlohmann::json& rtpParameters,
 		  const nlohmann::json& appData);
 
+
 	public:
 		const std::string& GetId() const;
 		const std::string& GetLocalId() const;
@@ -56,6 +58,10 @@ namespace mediasoupclient
 		nlohmann::json GetStats() const;
 		void Pause();
 		void Resume();
+
+		float GetRmsSignalLevel() const { return rmsSignalLevel; }
+
+		void OnData(const void *audio_data, int bits_per_sample, int sample_rate, size_t number_of_channels, size_t number_of_frames);
 
 	private:
 		void TransportClosed();
@@ -80,12 +86,16 @@ namespace mediasoupclient
 		webrtc::RtpReceiverInterface* rtpReceiver{ nullptr };
 		// Local track.
 		webrtc::MediaStreamTrackInterface* track{ nullptr };
+
 		// RTP parameters.
 		nlohmann::json rtpParameters;
 		// Paused flag.
 		bool paused{ false };
 		// App custom data.
 		nlohmann::json appData{};
+
+		// RMS signal level of last sample window in decibels
+		float rmsSignalLevel = FLT_MIN;
 	};
 } // namespace mediasoupclient
 

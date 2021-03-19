@@ -73,6 +73,8 @@ public class Consumer {
     nativeClose(mNativeConsumer);
   }
 
+  public float getRmsSignalLevel() { return nativeGetRmsSignalLevel(mNativeConsumer); }
+
   private static native String nativeGetNativeId(long consumer);
 
   private static native String nativeGetProducerId(long consumer);
@@ -97,4 +99,7 @@ public class Consumer {
   private static native String nativeGetStats(long consumer);
 
   private static native void nativeClose(long consumer);
+
+  private static native float nativeGetRmsSignalLevel(long consumer);
+
 }

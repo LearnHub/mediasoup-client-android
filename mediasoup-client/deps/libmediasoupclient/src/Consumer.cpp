@@ -23,6 +23,13 @@ namespace mediasoupclient
 	    appData(appData)
 	{
 		MSC_TRACE();
+
+		auto* audioTrack = dynamic_cast<webrtc::AudioTrackInterface*>(track);
+		if(audioTrack) {
+			audioTrack->AddSink(this);
+		} else {
+            MSC_WARN("Unexpected track type");
+		}
 	}
 
 	const std::string& Consumer::GetId() const
@@ -105,6 +112,11 @@ namespace mediasoupclient
 		if (this->closed)
 			return;
 
+		auto* audioTrack = dynamic_cast<webrtc::AudioTrackInterface*>(track);
+		if(audioTrack) {
+			audioTrack->RemoveSink(this);
+		}
+
 		this->closed = true;
 
 		this->privateListener->OnClose(this);
@@ -166,4 +178,23 @@ namespace mediasoupclient
 
 		this->listener->OnTransportClose(this);
 	}
+
+    // Expectation is 1 channel with 16 bits per sample
+	void Consumer::OnData(const void *audio_data, int bits_per_sample, int sample_rate, size_t number_of_channels, size_t number_of_frames) {
+        auto rms = 0LL;
+		const int samplecount = number_of_channels * number_of_frames;
+		if(samplecount > 0) {
+            // PCM format http://soundfile.sapp.org/doc/WaveFormat/ (audio_data is data section only - no header)
+            const auto *pcm = static_cast<const short *>(audio_data);
+            auto sumOfSquares = 0LL;
+            for (int i = 0; i < samplecount; ++i) {
+                sumOfSquares += pcm[i] * pcm[i];
+            }
+            rms = sqrt(sumOfSquares / samplecount);
+		}
+        // Linear to dB conversion (https://stackoverflow.com/a/6197702/671393)
+        rmsSignalLevel = (float) (20.0 * log10((double) (rms + 1) / (double) SHRT_MAX));
+	}
+
+
 } // namespace mediasoupclient

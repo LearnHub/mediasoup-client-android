@@ -127,7 +127,15 @@ static void JNI_Consumer_Close(JNIEnv* env, jlong j_consumer)
 	reinterpret_cast<OwnedConsumer*>(j_consumer)->consumer()->Close();
 }
 
-ScopedJavaLocalRef<jobject> NativeToJavaConsumer(
+static jfloat JNI_Consumer_GetRmsSignalLevel(JNIEnv* env, jlong j_consumer)
+{
+	MSC_TRACE();
+
+	return reinterpret_cast<OwnedConsumer*>(j_consumer)->consumer()->GetRmsSignalLevel();
+}
+
+
+	ScopedJavaLocalRef<jobject> NativeToJavaConsumer(
   JNIEnv* env, Consumer* consumer, ConsumerListenerJni* listener)
 {
 	auto ownedConsumer = new OwnedConsumer(consumer, listener);

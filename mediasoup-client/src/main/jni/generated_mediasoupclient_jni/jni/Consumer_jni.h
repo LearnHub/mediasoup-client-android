@@ -164,8 +164,18 @@ JNI_GENERATOR_EXPORT void Java_org_mediasoup_droid_Consumer_nativeClose(
   return JNI_Consumer_Close(env, consumer);
 }
 
+static jfloat JNI_Consumer_GetRmsSignalLevel(JNIEnv* env, jlong consumer);
 
-static std::atomic<jmethodID>
+JNI_GENERATOR_EXPORT jfloat Java_org_mediasoup_droid_Consumer_nativeGetRmsSignalLevel(
+        JNIEnv* env,
+        jclass jcaller,
+        jlong consumer) {
+    return JNI_Consumer_GetRmsSignalLevel(env, consumer);
+}
+
+
+
+    static std::atomic<jmethodID>
     g_org_mediasoup_droid_Consumer_00024Listener_onTransportClose(nullptr);
 static void Java_Listener_onTransportClose(JNIEnv* env, const base::android::JavaRef<jobject>& obj,
     const base::android::JavaRef<jobject>& consumer) {
