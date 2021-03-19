@@ -18,7 +18,7 @@ public:
 	}
 
 public:
-	void OnLog(Logger::LogLevel level, char* payload, size_t len) override
+	void OnLog(Logger::LogLevel level, const char* payload, size_t len) override
 	{
 		std::string message(payload, len);
 		auto env       = webrtc::AttachCurrentThreadIfNeeded();

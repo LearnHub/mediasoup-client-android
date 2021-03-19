@@ -66,12 +66,12 @@ namespace mediasoupclient
 		public:
 			// TODO(HaiyangWu): pr ?
 			virtual ~LogHandlerInterface()                                = default;
-			virtual void OnLog(LogLevel level, char* payload, size_t len) = 0;
+			virtual void OnLog(LogLevel level, const char* payload, size_t len) = 0;
 		};
 
 		class DefaultLogHandler : public LogHandlerInterface
 		{
-			void OnLog(LogLevel level, char* payload, size_t len) override;
+			void OnLog(LogLevel level, const char* payload, size_t len) override;
 		};
 
 		static void SetLogLevel(LogLevel level);
