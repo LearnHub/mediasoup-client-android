@@ -26,8 +26,8 @@ android {
                         "-DMEDIASOUPCLIENT_BUILD_TESTS=false",
                         "-DSDPTRANSFORM_BUILD_TESTS=OFF",
                         "-DSDPTRANSFORM_BUILD_READMEHELPER=OFF",
-                        "-DMEDIASOUPCLIENT_LOG_TRACE=ON",
-                        "-DMEDIASOUPCLIENT_LOG_DEV=ON"
+                        "-DMEDIASOUPCLIENT_LOG_TRACE=OFF",
+                        "-DMEDIASOUPCLIENT_LOG_DEV=OFF"
             }
         }
 
